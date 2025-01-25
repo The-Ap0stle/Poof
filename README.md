@@ -1,6 +1,6 @@
 # Poof
 
-### Poof is a spoofing tool that can be used buy pentesters and security researchers.
+### Poof is a spoofing tool that can be used by pentesters and security researchers.
 
 ## Features
   - IP spoofing
@@ -21,4 +21,14 @@
   ```
 
 ## Usage
-  1. Run IP spoofer :
+  1. Command :
+  ```
+  sudo poof 
+  ```
+  2. Select an option from the menu.
+  3. Follow the instructions for the selected feature.
+  4. The escape commands will be :
+  - Use command 'home' to return to homepage when in the interctive state (i.e. when user is able to inpu data).
+  - While a feature is in active state, press 'Ctrl+C' to return to homepage.
+  - If you want to exit the tool use command 'exit' in homepage.
+# Note: You will have to use wireshark to review the performance of the tool.
