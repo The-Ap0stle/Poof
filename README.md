@@ -9,7 +9,7 @@
 ## Installation
   1. Download the Binary :
   ```
-  wget https://github.com/The-Ap0stle/Poof/poof
+  wget https://github.com/The-Ap0stle/Poof/releases/download/v1.0.0/poof-linux
   ```
   2. Convert the binary to an executable:
   ```
