@@ -31,4 +31,3 @@
   - Use command 'home' to return to homepage when in the interctive state (i.e. when user is able to inpu data).
   - While a feature is in active state, press 'Ctrl+C' to return to homepage.
   - If you want to exit the tool use command 'exit' in homepage.
-- Note: You will have to use wireshark to review the performance of the tool.
