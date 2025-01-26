@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	"Poof/arp_poison"
-	"Poof/ip_spoof"
+	"github.com/The-Ap0stle/Poof/arp_poison"
+	"github.com/The-Ap0stle/Poof/ip_spoof"
 )
 
 func displayMenu() {

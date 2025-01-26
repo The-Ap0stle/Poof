@@ -1,4 +1,4 @@
-module Poof
+module github.com/The-Ap0stle/Poof
 
 go 1.23.2
 
