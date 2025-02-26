@@ -37,7 +37,7 @@ func pingHost(ip string) bool {
 func getMACAddress(interfaceName string, ip string) string {
 	handle, err := pcap.OpenLive(interfaceName, 1600, false, 1*time.Second)
 	if err != nil {
-		log.Printf("Error opening device %s: %v", interfaceName, err)
+		log.Printf("[!] Error opening device %s: %v", interfaceName, err)
 		return "Unknown"
 	}
 	defer handle.Close()
@@ -63,14 +63,14 @@ func getMACAddress(interfaceName string, ip string) string {
 	options := gopacket.SerializeOptions{}
 	err = gopacket.SerializeLayers(buffer, options, &eth, &arp)
 	if err != nil {
-		log.Printf("Error serializing ARP request: %v", err)
+		log.Printf("[!] Error serializing ARP request: %v", err)
 		return "Unknown"
 	}
 
 	// Send the ARP request
 	err = handle.WritePacketData(buffer.Bytes())
 	if err != nil {
-		log.Printf("Error sending ARP request to %v: %v", ip, err)
+		log.Printf("[!] Error sending ARP request to %v: %v", ip, err)
 		return "Unknown"
 	}
 
@@ -106,7 +106,7 @@ func getHostName(ip string) string {
 func getInterfaceMAC(interfaceName string) net.HardwareAddr {
 	iface, err := net.InterfaceByName(interfaceName)
 	if err != nil {
-		log.Printf("Error fetching interface %s: %v", interfaceName, err)
+		log.Printf("[!] Error fetching interface %s: %v", interfaceName, err)
 		return nil
 	}
 	return iface.HardwareAddr
@@ -116,12 +116,12 @@ func getInterfaceMAC(interfaceName string) net.HardwareAddr {
 func getInterfaceIP(interfaceName string) net.IP {
 	iface, err := net.InterfaceByName(interfaceName)
 	if err != nil {
-		log.Fatalf("Error fetching interface %s: %v", interfaceName, err)
+		log.Fatalf("[!] Error fetching interface %s: %v", interfaceName, err)
 	}
 
 	addrs, err := iface.Addrs()
 	if err != nil {
-		log.Fatalf("Error fetching addresses for interface %s: %v", interfaceName, err)
+		log.Fatalf("[!] Error fetching addresses for interface %s: %v", interfaceName, err)
 	}
 
 	for _, addr := range addrs {
@@ -129,7 +129,7 @@ func getInterfaceIP(interfaceName string) net.IP {
 			return ipNet.IP
 		}
 	}
-	log.Fatalf("No IPv4 address found for interface %s", interfaceName)
+	log.Fatalf("[!] No IPv4 address found for interface %s", interfaceName)
 	return nil
 }
 
@@ -173,10 +173,10 @@ func scanNetwork(interfaceName string, subnet string) {
 func Start() {
 	var interfaceName string
 
-	fmt.Println("Available network interfaces:")
+	fmt.Println("[+] Available network interfaces:")
 	interfaces, err := net.Interfaces()
 	if err != nil {
-		log.Fatalf("Error fetching network interfaces: %v", err)
+		log.Fatalf("[!] Error fetching network interfaces: %v", err)
 	}
 
 	for _, iface := range interfaces {
@@ -185,30 +185,30 @@ func Start() {
 	reader := bufio.NewReader(os.Stdin)
 
 	for {
-		fmt.Print("Enter the network interface name: ")
+		fmt.Print("[?] Enter the network interface name: ")
 		input, err := reader.ReadString('\n')
 		if err != nil {
-			fmt.Println("\nError reading input:", err)
+			fmt.Println("\n[!] Error reading input:", err)
 			continue
 		}
 		interfaceName = strings.TrimSpace(input)
 
 		if interfaceName == "h" || interfaceName == "home" {
-			fmt.Printf("\nExiting ARP Poisoning...")
+			fmt.Printf("\n[$] Exiting ARP Poisoning...")
 			return
 		}
 
 		// Validate if the interface exists
 		iface, err := net.InterfaceByName(interfaceName)
 		if err != nil {
-			fmt.Printf("Invalid interface name '%s': %v\n", interfaceName, err)
+			fmt.Printf("[!] Invalid interface name '%s': %v\n", interfaceName, err)
 			continue
 		}
 
 		// Validate the interface has an IPv4 address
 		addrs, err := iface.Addrs()
 		if err != nil || len(addrs) == 0 {
-			fmt.Printf("No IP address found for interface '%s'\n", interfaceName)
+			fmt.Printf("[!] No IP address found for interface '%s'\n", interfaceName)
 			continue
 		}
 		break
@@ -216,6 +216,6 @@ func Start() {
 
 	interfaceIP := getInterfaceIP(interfaceName)
 	subnet := strings.Join(strings.Split(interfaceIP.String(), ".")[:3], ".")
-	fmt.Printf("Scanning network: %s.0/24...\n", subnet)
+	fmt.Printf("[+] Scanning network: %s.0/24...\n", subnet)
 	scanNetwork(interfaceName, subnet)
 }

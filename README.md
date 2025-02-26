@@ -9,7 +9,7 @@
 ## Installation
   1. Download the Binary :
   ```
-  wget https://github.com/The-Ap0stle/Poof/releases/download/v1.0.0/poof-linux
+  wget https://github.com/The-Ap0stle/Poof/releases/download/v1.0.0/poof
   ```
   2. Convert the binary to an executable:
   ```
@@ -21,14 +21,8 @@
   ```
 
 ## Usage
-  1. Command :
+  - Command :
   ```
   sudo poof 
   ```
-  2. Select an option from the menu.
-  3. Follow the instructions for the selected feature.
-  4. The escape commands will be :
-  - Use command 'home' to return to homepage when in the interctive state (i.e. when user is able to input data).
-  - While a feature is in active state, press 'Ctrl+C' to return to homepage.
-  - If you want to exit the tool use command 'exit' in homepage.
-- Note: You will have to use wireshark to review the performance of the tool.
+Read the documentation in Medium
